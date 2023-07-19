@@ -5,6 +5,8 @@ import dotenv from 'dotenv'
 import helmet from 'helmet'
 import connectDB from "./database/db"
 
+import parking from "./routes/parking"
+
 dotenv.config({
     path: "./config/.env"
 })
@@ -12,6 +14,8 @@ dotenv.config({
 connectDB()
 
 const app = express()
+
+const port = 3000 || process.env.PORT
 
 app.use(express.json());
 
@@ -22,11 +26,10 @@ app.use(cookieParser());
 app.use(helmet())
 
 
-const port = 3000 || process.env.PORT
 
-app.get('/', (_, res) => {
-    res.send('Hello World!')
-})
+app.get('/', (_, res) => res.send('Welcome to the Parking service'))
+
+app.use('/api/v1', parking)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router
     .route("/parking")
+    .get(ParkingController.getParkingPlates)
     .post(ParkingController.postParking)
 
 router
@@ -19,3 +20,6 @@ router
 router
     .route("/parking/:plate")
     .get(ParkingController.getByPlate)
+
+
+export default router
