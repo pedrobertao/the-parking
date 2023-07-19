@@ -1,7 +1,6 @@
 import express from "express"
 import * as ParkingController from "../controllers/parking"
 
-
 const router = express.Router();
 
 router

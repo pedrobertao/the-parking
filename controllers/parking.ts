@@ -44,7 +44,7 @@ const postParking = async (req: Request, res: Response) => {
 }
 
 const putParkingOut = async (req: Request, res: Response) => {
-    const plate: string = req.params.id
+    const plate = req.params.id
     const user = await Parking.findOne({ plate }).exec()
 
     if (!user) {
@@ -78,7 +78,7 @@ const putParkingOut = async (req: Request, res: Response) => {
 }
 
 const putParkingPay = async (req: Request, res: Response) => {
-    const userId: string = req.params.id
+    const userId = req.params.id
     const amount: number = req.body.amount
 
     try {
@@ -163,7 +163,7 @@ const getByPlate = async (req: Request, res: Response) => {
 
 
 
-const getParkingPlates = async (req: Request, res: Response) => {
+const getParkingPlates = async (_: Request, res: Response) => {
     try {
         const users = await Parking.find({})
         let usersParsed: IPark[] = []

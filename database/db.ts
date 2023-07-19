@@ -17,6 +17,7 @@ const connectDB = async () => {
         }
     }
     console.log("Connected to DB")
+
 };
 
 export default connectDB;
