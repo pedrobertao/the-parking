@@ -16,7 +16,7 @@ const postParking = async (req: Request, res: Response) => {
         }
 
         if (!plate) {
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: ErrorMsg.PLATE_NOT_REGISTERED
             })
@@ -52,7 +52,7 @@ const postParking = async (req: Request, res: Response) => {
             }
 
         } else {
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: ErrorMsg.PLATE_NOT_REGISTERED
             })
@@ -82,7 +82,7 @@ const putParkingOut = async (req: Request, res: Response) => {
     }
 
     if (!user.paid) {
-        return res.status(404).json({
+        return res.status(400).json({
             success: false,
             message: "User hasn't paid yet"
         })
@@ -115,8 +115,8 @@ const putParkingPay = async (req: Request, res: Response) => {
     const userId = req.params.id
     const amount: number = req.body.amount
 
-    if (amount <= 0) {
-        return res.status(404).json({
+    if (amount <= 0 || amount > 1000000) {
+        return res.status(400).json({
             success: false,
             message: "Invalid amount"
         })
@@ -132,7 +132,7 @@ const putParkingPay = async (req: Request, res: Response) => {
         }
 
         if (user.paid) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: "User already paid"
             })
