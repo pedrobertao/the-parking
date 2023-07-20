@@ -1,5 +1,5 @@
 import { Response, Request } from "express"
-import { Parking, IPark } from "../models/Parking"
+import { Parking, IPark, calcTimeOnParking } from "../models/Parking"
 import * as ErrorMsg from "../constants/errors"
 import dayjs from "dayjs"
 
@@ -15,25 +15,43 @@ const postParking = async (req: Request, res: Response) => {
             })
         }
 
+        const userDB = await Parking.findOne({ plate }).exec()
+        if (userDB) {
+            if (userDB.paid && userDB.left) {
+                await Parking.insertMany([{
+                    left: false,
+                    paid: false,
+                    paidAmount: 0,
+                    plate: plate
+                }])
+                return res.status(200).json({
+                    success: true,
+                    plate: plate
+                })
+            }
 
-        const plateDB = await Parking.findOne({ plate }).exec()
-        if (plateDB) {
+            if (!userDB.paid && !userDB.left) {
+                return res.status(400).json({
+                    success: true,
+                    message: "Car hasn't paid yet"
+                })
+            }
+
+            if (userDB.paid && !userDB.left) {
+                return res.status(400).json({
+                    success: true,
+                    message: "Car hasn't left yet"
+                })
+            }
+
+        } else {
             return res.status(400).json({
                 success: false,
                 message: ErrorMsg.PLATE_NOT_REGISTERED
             })
         }
 
-        await Parking.insertMany([{
-            left: false,
-            paid: false,
-            paidAmount: 0,
-            plate: plate
-        }])
-        return res.status(200).json({
-            success: true,
-            plate: plate
-        })
+
 
     } catch (error) {
         return res.status(500).json({
@@ -54,15 +72,22 @@ const putParkingOut = async (req: Request, res: Response) => {
         })
     }
 
-    if (user.left) {
+    if (!user.paid) {
         return res.status(404).json({
             success: false,
+            message: "User hasn't paid yet"
+        })
+    }
+
+
+    if (user.paid && user.left) {
+        return res.status(200).json({
+            success: true,
             message: "User already left"
         })
     }
 
     try {
-
         await Parking.findOneAndUpdate({ plate }, { left: true })
         return res.status(200).json({
             success: true,
@@ -129,28 +154,28 @@ const getByPlate = async (req: Request, res: Response) => {
     }
 
     try {
-
-
-        const user = await Parking.findOne({ plate: plate })
-
-        if (!user) {
+        const userHistory = await Parking.find({ plate })
+        if (!userHistory) {
             return res.status(404).json({
                 success: false,
                 message: ErrorMsg.USER_NOT_SIGNED
             })
         }
 
-        const userParsed = {
-            id: user.id,
-            time: user.updatedAt,
-            paid: user.paid,
-            left: user.left,
-            paidAmount: user.paidAmount
-        }
+        userHistory.map(user => {
+            const time = calcTimeOnParking(user.paid, user.createdAt, user.whenPaid)
+            return {
+                id: user.id,
+                paid: user.paid,
+                left: user.left,
+                paidAmount: user.paidAmount,
+                time
+            }
+        })
 
         return res.status(200).json({
             success: true,
-            user: userParsed
+            user: userHistory
         })
 
     } catch (error) {
@@ -162,7 +187,6 @@ const getByPlate = async (req: Request, res: Response) => {
 }
 
 
-
 const getParkingPlates = async (_: Request, res: Response) => {
     try {
         const users = await Parking.find({})
@@ -170,19 +194,14 @@ const getParkingPlates = async (_: Request, res: Response) => {
 
         if (users) {
             usersParsed = users.map(u => {
-                const now = dayjs()
-                const whenCreated = dayjs(u.createdAt)
-                const whenPaid = dayjs(u.whenPaid)
-
-                const timeDif = u.paid ? whenPaid : now
-                const time = `${timeDif.diff(whenCreated, 'minute')} minutes`
-
+                const time = calcTimeOnParking(u.paid, u.createdAt, u.whenPaid)
                 return {
-                    id: u.id, time,
+                    id: u.id,
                     paid: u.paid,
                     left: u.left,
                     paidAmount: u.paidAmount,
                     plate: u.plate,
+                    time,
                 }
             })
         }
