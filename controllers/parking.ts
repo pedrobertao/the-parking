@@ -1,12 +1,19 @@
 import { Response, Request } from "express"
 import { Parking, IPark, calcTimeOnParking } from "../models/Parking"
+import { isValidPlate } from "../utils/utils"
 import * as ErrorMsg from "../constants/errors"
 import dayjs from "dayjs"
-
 
 const postParking = async (req: Request, res: Response) => {
     try {
         const plate: string = req.body.plate
+
+        if (!isValidPlate(plate)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid plate"
+            })
+        }
 
         if (!plate) {
             return res.status(400).json({
@@ -61,9 +68,11 @@ const postParking = async (req: Request, res: Response) => {
     }
 }
 
+
+
 const putParkingOut = async (req: Request, res: Response) => {
-    const plate = req.params.id
-    const user = await Parking.findOne({ plate }).exec()
+    const userId = req.params.id
+    const user = await Parking.findById(userId).exec()
 
     if (!user) {
         return res.status(404).json({
@@ -88,7 +97,7 @@ const putParkingOut = async (req: Request, res: Response) => {
     }
 
     try {
-        await Parking.findOneAndUpdate({ plate }, { left: true })
+        await Parking.findByIdAndUpdate(userId, { left: true })
         return res.status(200).json({
             success: true,
             message: "User left"
@@ -106,6 +115,12 @@ const putParkingPay = async (req: Request, res: Response) => {
     const userId = req.params.id
     const amount: number = req.body.amount
 
+    if (amount <= 0) {
+        return res.status(404).json({
+            success: false,
+            message: "Invalid amount"
+        })
+    }
     try {
         const user = await Parking.findById(userId).exec()
 
