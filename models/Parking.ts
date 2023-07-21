@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose"
-import dayjs from 'dayjs'
 
 interface IPark {
     id: string
@@ -9,6 +8,14 @@ interface IPark {
     paidAmount: number
 }
 
+interface IUserHistory {
+    id: string;
+    paid: boolean;
+    left: boolean;
+    plate: string;
+    paidAmount: number;
+    time: string
+}
 
 const ParkingSchema = new Schema({
     plate: { type: String, required: true },
@@ -23,20 +30,9 @@ const ParkingSchema = new Schema({
 const Parking = mongoose.model('Parking', ParkingSchema);
 
 
-const calcTimeOnParking = (paid: boolean, whenCreated: Date, whenPaid: Date | undefined): string => {
-    const now = dayjs()
-
-    if (!whenPaid) {
-        return ""
-    }
-
-    const timeDif = paid ? dayjs(whenPaid) : now
-    const time = `${timeDif.diff(dayjs(whenCreated), 'minute')} minutes`
-    return time
-}
 
 export {
     Parking,
     IPark,
-    calcTimeOnParking
+    IUserHistory
 }

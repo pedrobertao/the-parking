@@ -1,6 +1,6 @@
 import { Response, Request } from "express"
-import { Parking, IPark, calcTimeOnParking } from "../models/Parking"
-import { isValidPlate } from "../utils/utils"
+import { Parking, IPark, IUserHistory } from "../models/Parking"
+import { isValidPlate, calcTimeOnParking } from "../utils/utils"
 import * as ErrorMsg from "../constants/errors"
 import dayjs from "dayjs"
 
@@ -49,7 +49,7 @@ const postParking = async (req: Request, res: Response) => {
             return res.status(200).json({
                 success: true,
                 plate: plate,
-                id: parkingInserted[0]._id,
+                id: parkingInserted[0]._id.toString(),
             })
         }
 
@@ -83,8 +83,8 @@ const putParkingOut = async (req: Request, res: Response) => {
 
 
     if (user.paid && user.left) {
-        return res.status(200).json({
-            success: true,
+        return res.status(400).json({
+            success: false,
             message: "User already left"
         })
     }
@@ -115,6 +115,7 @@ const putParkingPay = async (req: Request, res: Response) => {
         })
     }
     try {
+
         const user = await Parking.findById(userId).exec()
 
         if (!user) {
@@ -151,6 +152,7 @@ const putParkingPay = async (req: Request, res: Response) => {
 }
 
 
+
 const getByPlate = async (req: Request, res: Response) => {
     const plate = req.params.plate
 
@@ -170,20 +172,23 @@ const getByPlate = async (req: Request, res: Response) => {
             })
         }
 
+        const parsedUserHistory: IUserHistory[] = []
         userHistory.map(user => {
             const time = calcTimeOnParking(user.paid, user.createdAt, user.whenPaid)
-            return {
-                id: user.id,
+            parsedUserHistory.push({
+                id: user._id.toString(),
                 paid: user.paid,
                 left: user.left,
+                plate: user.plate,
                 paidAmount: user.paidAmount,
                 time
-            }
+            })
         })
+
 
         return res.status(200).json({
             success: true,
-            user: userHistory
+            user: parsedUserHistory
         })
 
     } catch (error) {
@@ -204,7 +209,7 @@ const getParkingPlates = async (_: Request, res: Response) => {
             usersParsed = users.map(u => {
                 const time = calcTimeOnParking(u.paid, u.createdAt, u.whenPaid)
                 return {
-                    id: u.id,
+                    id: u._id.toString(),
                     paid: u.paid,
                     left: u.left,
                     paidAmount: u.paidAmount,
