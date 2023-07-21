@@ -1,2 +1,2 @@
 //babel.config.js
-export const presets = ['@babel/preset-env'];
+// export const presets = ['@babel/preset-env'];

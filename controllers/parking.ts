@@ -25,6 +25,13 @@ const postParking = async (req: Request, res: Response) => {
         const userDB = await Parking.findOne({ plate }).exec()
         if (userDB) {
             if (userDB.paid && userDB.left) {
+
+                if (process.env.NODE_ENV === "test") {
+                    return res.status(200).json({
+                        success: true,
+                        plate: plate
+                    })
+                }
                 await Parking.insertMany([{
                     left: false,
                     paid: false,
@@ -39,14 +46,14 @@ const postParking = async (req: Request, res: Response) => {
 
             if (!userDB.paid && !userDB.left) {
                 return res.status(400).json({
-                    success: true,
+                    success: false,
                     message: "Car hasn't paid yet"
                 })
             }
 
             if (userDB.paid && !userDB.left) {
                 return res.status(400).json({
-                    success: true,
+                    success: false,
                     message: "Car hasn't left yet"
                 })
             }

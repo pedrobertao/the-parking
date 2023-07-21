@@ -1,15 +1,30 @@
+import server from '../../app'
+import supertest from 'supertest';
+import mongoose from 'mongoose';
+const request = supertest(server);
 
-import { Parking } from '../../models/Parking';
-import mockingoose from 'mockingoose'
+const databaseName = 'test'
 
-jest.mock('../../models/Parking');
 
-mockingoose(Parking).toReturn([
-    {}
-], 'find');
+describe('User Endpoints', () => {
+    beforeAll(async () => {
+        const url = `mongodb://127.0.0.1/${databaseName}`
+        await mongoose.connect(url)
+    })
 
-describe('app', () => {
-    it('should return mocked users from /users route', async () => {
+    it('GET /user should show all users', async () => {
+        //        try {
+        const res = await request.post('api/v1/parking').send({ plate: "BRA2E19" })
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+
+        expect(res.status).toEqual(200);
+        console.log("====>1", res)
+        // } catch (error) {
+        //     console.log("====>2", error)
+
+        // }
 
     });
+
 });
