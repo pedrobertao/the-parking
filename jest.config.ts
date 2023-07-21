@@ -1,8 +1,5 @@
 module.exports = {
-  preset: ['ts-jest', "@shelf/jest-mongodb"],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   collectCoverage: true,
-  transform: {
-    '^.+\\.(ts|tsx)?$': 'ts-jest',
-    "^.+\\.(js|jsx)$": "babel-jest",
-  }
 };
