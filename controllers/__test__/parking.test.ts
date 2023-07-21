@@ -4,7 +4,7 @@ const request = supertest(server);
 
 
 describe('/parking', () => {
-    const plate = "BRA9E21"
+    const plate = "BRA9E22"
     let idPlate = ""
     it('Register a plate', async () => {
         const res = await request.post('/api/v1/parking').send({ plate })

@@ -226,11 +226,15 @@ const getParkingPlates = async (_: Request, res: Response) => {
     }
 }
 
+const dropDB = async () => {
+    await Parking.deleteMany({})
+}
 
 export {
     postParking,
     putParkingOut,
     putParkingPay,
     getByPlate,
-    getParkingPlates
+    getParkingPlates,
+    dropDB
 }
