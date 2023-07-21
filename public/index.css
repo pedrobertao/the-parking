@@ -1,0 +1,46 @@
+body {
+    background-color: slateblue;
+    text-align: center;
+}
+
+h1 {
+    color: beige;
+}
+
+h4 {
+    padding: 0;
+    margin: 8px;
+}
+
+h6 {
+
+    padding: 2px;
+    margin: 2px;
+    color: rgb(240, 255, 255);
+}
+
+.box {
+    padding: 1em;
+    margin-top: 12px;
+    align-items: center;
+    border: 1px solid rgb(240, 255, 255, 0.5);
+
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    background-color: #bbb;
+    border-radius: 50%;
+
+}
+
+.endpoints {
+    font-weight: bold;
+    color: wheat;
+}
+
+.description {
+    font-weight: 500;
+    color: gold;
+}

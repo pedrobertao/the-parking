@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Parking </title>
+</head>
+
+<body>
+    <div>
+        <h1>Endpoints available</h1>
+        <div>
+            <div class="box">
+                <h4 class="endpoints">/parking</h4>
+                <h6>GET</h6>
+                <small class="description">Return all plates/car registered</small>
+                <h6>POST</h6>
+                <small class="description">Register a plate by sending a plate like { plate : 'BRA1234' }</small>
+            </div>
+
+
+            <div class="box">
+                <h4 class="endpoints">/parking/:id/out</h4>
+                <h6>PUT</h6>
+                <small class="description">Mark plate/car as leaving the parking lot</small>
+            </div>
+
+            <div class="box">
+                <h4 class="endpoints">/parking/:id/pay</h4>
+                <h6>PUT</h6>
+                <small class="description">Mark the car/plate as paid, and need to \n send an amount in the body like {
+                    amount : 20 } </small>
+            </div>
+
+            <div class="box">
+                <h4 class="endpoints">/parking</h4>
+                <h6>GET</h6>
+                <small class="description">Return all plates/car registered</small>
+                <h6>POST</h6>
+                <small class="description">Register a plate</small>
+            </div>
+
+            <div class="box">
+                <h4 class="endpoints">/parking/:plate</h4>
+                <h6>GET</h6>
+                <small class="description">Return info about the plate</small>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</body>
+
+</html>

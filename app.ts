@@ -12,9 +12,11 @@ app.use(mongoSanitize())
 
 app.use(cookieParser());
 
+app.use(express.static('public'));
+
 app.use(helmet())
 
-app.get('/', (_, res) => res.send('Welcome to the Parking service'))
+app.get('/', express.static(__dirname + '/public'))
 
 app.use('/api/v1', parking)
 
