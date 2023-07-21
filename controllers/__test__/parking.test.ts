@@ -1,30 +1,36 @@
 import server from '../../app'
 import supertest from 'supertest';
-import mongoose from 'mongoose';
 const request = supertest(server);
 
-const databaseName = 'test'
 
-
-describe('User Endpoints', () => {
-    beforeAll(async () => {
-        const url = `mongodb://127.0.0.1/${databaseName}`
-        await mongoose.connect(url)
-    })
-
-    it('GET /user should show all users', async () => {
-        //        try {
-        const res = await request.post('api/v1/parking').send({ plate: "BRA2E19" })
+describe('/parking', () => {
+    const plate = "BRA9E21"
+    let idPlate = ""
+    it('Register a plate', async () => {
+        const res = await request.post('/api/v1/parking').send({ plate })
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
 
         expect(res.status).toEqual(200);
-        console.log("====>1", res)
-        // } catch (error) {
-        //     console.log("====>2", error)
-
-        // }
-
+        expect(res.body.plate).toEqual(plate)
+        idPlate = res.body.id.toString()
     });
 
+    it('Paid a plate', async () => {
+        const res = await request.put(`/api/v1/parking/${idPlate}/pay`)
+            .send({ amount: 20 })
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+
+        expect(res.status).toEqual(200);
+    });
+
+    it('Car leave place', async () => {
+        const res = await request.put(`/api/v1/parking/${idPlate}/out`)
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+
+        expect(res.status).toEqual(200);
+
+    });
 });

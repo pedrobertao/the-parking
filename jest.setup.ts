@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 /* Connecting to the database before each test. */
-beforeEach(async () => {
-    await mongoose.connect(process.env.MONGODB_URL || "");
+beforeAll(async () => {
+    await mongoose.connect('mongodb://localhost:27017/parking');
 });
 
 /* Closing database connection after each test. */
-afterEach(async () => {
+afterAll(async () => {
     await mongoose.connection.close();
 });

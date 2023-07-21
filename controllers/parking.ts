@@ -16,7 +16,7 @@ const postParking = async (req: Request, res: Response) => {
         }
 
         if (!plate) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: ErrorMsg.PLATE_NOT_REGISTERED
             })
@@ -24,48 +24,34 @@ const postParking = async (req: Request, res: Response) => {
 
         const userDB = await Parking.findOne({ plate }).exec()
         if (userDB) {
-            if (userDB.paid && userDB.left) {
-
-                if (process.env.NODE_ENV === "test") {
-                    return res.status(200).json({
-                        success: true,
-                        plate: plate
-                    })
-                }
-                await Parking.insertMany([{
-                    left: false,
-                    paid: false,
-                    paidAmount: 0,
-                    plate: plate
-                }])
-                return res.status(200).json({
-                    success: true,
-                    plate: plate
-                })
-            }
-
             if (!userDB.paid && !userDB.left) {
                 return res.status(400).json({
                     success: false,
-                    message: "Car hasn't paid yet"
+                    message: "Car registered and hasn't paid yet"
                 })
             }
 
             if (userDB.paid && !userDB.left) {
                 return res.status(400).json({
                     success: false,
-                    message: "Car hasn't left yet"
+                    message: "Car registered and hasn't left yet"
                 })
             }
 
         } else {
-            return res.status(404).json({
-                success: false,
-                message: ErrorMsg.PLATE_NOT_REGISTERED
+            const parkingInserted = await Parking.insertMany([{
+                left: false,
+                paid: false,
+                paidAmount: 0,
+                plate: plate
+            }])
+
+            return res.status(200).json({
+                success: true,
+                plate: plate,
+                id: parkingInserted[0]._id,
             })
         }
-
-
 
     } catch (error) {
         return res.status(500).json({
