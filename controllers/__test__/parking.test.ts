@@ -136,5 +136,13 @@ describe('Parking', () => {
         expect(res.body.success).toBeFalsy()
     });
 
+    it('First car enters again but he already used our services', async () => {
+        const res = await request.post('/api/v1/parking').send({ plate })
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+
+        expect(res.status).toEqual(200);
+    });
+
 });
 

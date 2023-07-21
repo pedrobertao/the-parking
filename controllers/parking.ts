@@ -11,7 +11,7 @@ const postParking = async (req: Request, res: Response) => {
         if (!isValidPlate(plate)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid plate"
+                message: ErrorMsg.INVALID_PLATE
             })
         }
 
@@ -27,16 +27,22 @@ const postParking = async (req: Request, res: Response) => {
             if (!userDB.paid && !userDB.left) {
                 return res.status(400).json({
                     success: false,
-                    message: "Car registered and hasn't paid yet"
+                    message: ErrorMsg.CAR_REGISTERED_NOT_PAY
+
                 })
             }
 
             if (userDB.paid && !userDB.left) {
                 return res.status(400).json({
                     success: false,
-                    message: "Car registered and hasn't left yet"
+                    message: ErrorMsg.CAR_REGISTERED_NOT_LEFT
                 })
             }
+
+            return res.status(200).json({
+                success: true,
+                message: ErrorMsg.CAR_ALREADY_USED
+            })
 
         } else {
             const parkingInserted = await Parking.insertMany([{
@@ -62,7 +68,6 @@ const postParking = async (req: Request, res: Response) => {
 }
 
 
-
 const putParkingOut = async (req: Request, res: Response) => {
     const userId = req.params.id
     const user = await Parking.findById(userId).exec()
@@ -77,7 +82,7 @@ const putParkingOut = async (req: Request, res: Response) => {
     if (!user.paid) {
         return res.status(400).json({
             success: false,
-            message: "User hasn't paid yet"
+            message: ErrorMsg.USER_NO_PAID
         })
     }
 
@@ -85,7 +90,7 @@ const putParkingOut = async (req: Request, res: Response) => {
     if (user.paid && user.left) {
         return res.status(400).json({
             success: false,
-            message: "User already left"
+            message: ErrorMsg.USER_LEFT
         })
     }
 
@@ -93,7 +98,7 @@ const putParkingOut = async (req: Request, res: Response) => {
         await Parking.findByIdAndUpdate(userId, { left: true })
         return res.status(200).json({
             success: true,
-            message: "User left"
+            message: ErrorMsg.USER_LEFT
         })
 
     } catch (error) {
@@ -111,7 +116,7 @@ const putParkingPay = async (req: Request, res: Response) => {
     if (amount <= 0 || amount > 1000000) {
         return res.status(400).json({
             success: false,
-            message: "Invalid amount"
+            message: ErrorMsg.INVALID_AMOUNT
         })
     }
     try {
@@ -128,7 +133,7 @@ const putParkingPay = async (req: Request, res: Response) => {
         if (user.paid) {
             return res.status(400).json({
                 success: false,
-                message: "User already paid"
+                message: ErrorMsg.USER_ALREADY_PAID
             })
         }
 
