@@ -18,5 +18,4 @@ app.get('/', (_, res) => res.send('Welcome to the Parking service'))
 
 app.use('/api/v1', parking)
 
-
 export default app

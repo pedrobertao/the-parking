@@ -1,6 +1,6 @@
 const USER_NOT_SIGNED = "User has not be registered or has been deleted"
 const PLATE_NOT_REGISTERED = "Plate not registered"
-const USER_LEFT = "User already left"
+const USER_LEFT = "Bye bye"
 const INVALID_AMOUNT = "Invalid amount"
 const USER_ALREADY_PAID = "User already paid his parking fee"
 const USER_NO_PAID = "User didn`t pay his parking fee"
