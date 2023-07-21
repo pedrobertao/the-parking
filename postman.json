@@ -1,0 +1,155 @@
+{
+    "info": {
+        "_postman_id": "9fe2fe12-359e-4654-9af9-f13042e94dc6",
+        "name": "Parking System",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "1915724"
+    },
+    "item": [
+        {
+            "name": "Get all plates",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://theparking.store/api/v1/parking",
+                    "protocol": "https",
+                    "host": [
+                        "theparking",
+                        "store"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "parking"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Put plate",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"plate\": \"BRA1234\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://theparking.store/api/v1/parking",
+                    "protocol": "https",
+                    "host": [
+                        "theparking",
+                        "store"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "parking"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Out from park",
+            "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                    "raw": "https://theparking.store/api/v1/parking/:id/out",
+                    "protocol": "https",
+                    "host": [
+                        "theparking",
+                        "store"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "parking",
+                        ":id",
+                        "out"
+                    ],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "64baeebdb2437aa67ad92f81"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Pay Park",
+            "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"amount\": 20\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://theparking.store/api/v1/parking/:id/pay",
+                    "protocol": "https",
+                    "host": [
+                        "theparking",
+                        "store"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "parking",
+                        ":id",
+                        "pay"
+                    ],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "64baeebdb2437aa67ad92f81"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get by Plate",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "localhost:3000/api/v1/parking/:plate",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "parking",
+                        ":plate"
+                    ],
+                    "variable": [
+                        {
+                            "key": "plate",
+                            "value": "BRA1234"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}
